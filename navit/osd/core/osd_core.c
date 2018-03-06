@@ -2089,6 +2089,10 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 	char *image;
 	char *name = "unknown";
 	int level = this->level;
+	int time_to_the_next_maneuver = osd_time_to_the_next_maneuver(navit); //Get time in minutes
+	int distance_to_the_next_maneuver = osd_distance_to_the_next_maneuver(navit); //Get Dsitance in meters
+        dbg(lvl_error, "Time=%d\n", time_to_the_next_maneuver);//Debug will print line to shell with time
+        dbg(lvl_error, "Distance remaining=%d\n", distance_to_the_next_maneuver);// And Distance.
 
 	if (navit)
 		nav = navit_get_navigation(navit);
@@ -2100,8 +2104,8 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		while ((item = map_rect_get_item(mr))
 		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
-		name = item_to_name(item->type);
-		dbg(lvl_debug, "name=%s\n", name);
+		name = item_to_name(item->type);//item name found
+		dbg(lvl_debug, "name=%s\n", name); //debug level changed from 'debug' to 'error'
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
 			this->last_name = name;
@@ -2114,7 +2118,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		}
 	}
 	if (mr)
-		map_rect_destroy(mr);
+		map_rect_destroy(mr);//access object is distroyed
 
 	if (do_draw) {
 		osd_fill_with_bgcolor(&opc->osd_item);
