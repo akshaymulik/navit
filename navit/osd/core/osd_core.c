@@ -2009,6 +2009,39 @@ struct nav_next_turn {
 	int level;
 };
 
+//usage: int d = osd_distance_to_the_next_maneuver(navit);
+static int osd_distance_to_the_next_maneuver(struct navit *this_)
+{
+	struct navigation *nav=this_->navigation;
+	struct map *map=NULL;
+	struct map_rect *mr=NULL;
+	struct item *item;
+	struct attr attr;
+	int secs;
+
+	if (nav)
+		map=navigation_get_map(nav);
+	if (map)
+		mr=map_rect_new(map, NULL);
+	
+	if (mr) 
+	{
+		while ((item=map_rect_get_item(mr))) //convert-to if for single use
+		{
+                        /* Distance to the next maneuver. */
+			item_attr_get(item, attr_length, &attr);
+			dbg(lvl_error, "Length=%ld in meters\n", attr.u.num); //Print Distance Arrival of next Maneuver
+			param[1].name=_("Length");
+			if ( attr.u.num >= 150 ) /*150m for bike and 200m for motor-vehicles*/
+			{return -1;}
+			else
+			{return attr.u.num;}
+		}
+
+		map_rect_destroy(mr);
+	}
+}
+
 static void
 osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       struct vehicle *v)
