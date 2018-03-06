@@ -2042,6 +2042,37 @@ static int osd_distance_to_the_next_maneuver(struct navit *this_)
 	}
 }
 
+//usage: int t = osd_time_to_the_next_maneuver(navit);
+static int osd_time_to_the_next_maneuver(struct navit *this_)
+{
+	struct navigation *nav=this_->navigation;
+	struct map *map=NULL;
+	struct map_rect *mr=NULL;
+	struct item *item;
+	struct attr attr;
+	int secs;
+	int min;
+
+	if (nav)
+		map=navigation_get_map(nav);
+	if (map)
+		mr=map_rect_new(map, NULL);
+	
+	if (mr) 
+	{
+		while ((item=map_rect_get_item(mr))) //convert-to if for single use
+		{
+                        /* Time to next maneuver. */
+			item_attr_get(item, attr_time, &attr);
+			dbg(lvl_error, "Time=%ld\n", attr.u.num);
+			secs=attr.u.num/10;
+		}
+		min = secs/60;
+        return min;
+		map_rect_destroy(mr);
+	}
+}
+
 static void
 osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       struct vehicle *v)
