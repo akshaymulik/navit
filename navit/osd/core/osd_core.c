@@ -2032,7 +2032,7 @@ static int osd_distance_to_the_next_maneuver(struct navit *navit)
 		{
                         /* Distance to the next maneuver. */
 			item_attr_get(item, attr_length, &attr);
-			dbg(lvl_error, "Length=%ld in meters\n", attr.u.num); //Print Distance Arrival of next Maneuver
+			//dbg(lvl_error, "Length=%ld in meters\n", attr.u.num); //Print Distance Arrival of next Maneuver
 			if ( attr.u.num >= 150 ) /*150m for bike and 200m for motor-vehicles*/
 			{return -1;}
 			else
@@ -2067,7 +2067,7 @@ static int osd_time_to_the_next_maneuver(struct navit *navit)
 		{
                         /* Time to next maneuver. */
 			item_attr_get(item, attr_time, &attr);
-			dbg(lvl_error, "Time=%ld\n", attr.u.num);
+			//dbg(lvl_error, "Time=%ld\n", attr.u.num);
 			secs=attr.u.num/10;
 		}
 		min = secs/60;
@@ -2108,7 +2108,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
 		name = item_to_name(item->type);//item name found
-		dbg(lvl_debug, "name=%s\n", name); //debug level changed from 'debug' to 'error'
+		dbg(lvl_error, "name=%s\n", name); //debug level changed from 'debug' to 'error'
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
 			this->last_name = name;
