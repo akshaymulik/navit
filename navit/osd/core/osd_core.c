@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <glib.h>
 #include <time.h>
+#include <wiringPi.h>
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
@@ -2077,6 +2078,7 @@ static int osd_time_to_the_next_maneuver(struct navit *navit)
 	}
 }
 
+//Left/Right/Straight
 static int my_next_turn(char *word)
 {
  int i = 0;
@@ -2140,7 +2142,12 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 	struct graphics_image *gr_image;
 	char *image;
 	char *name = "unknown";
-	int level = this->level;
+	int Right = 19;//pin-for-GPIO
+        int Left  = 26;//pin-for-GPIO
+        wiringPiSetup () ; //Set-up Gpio, Ground Pin 39.
+        pinMode (Right, OUTPUT) ; //Physical pin 35
+        pinMode (Left, OUTPUT)  ; //Physical pin 37 
+	int level = this->level; 
 	//int time_to_the_next_maneuver = osd_time_to_the_next_maneuver(navit); //Get time in minutes
 	int distance_to_the_next_maneuver = osd_distance_to_the_next_maneuver(navit); //Get Dsitance in meters
         //dbg(lvl_error, "Time=%d\n", time_to_the_next_maneuver);//Debug will print line to shell with time
@@ -2171,8 +2178,12 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		}
 	}
 	//GPIO Signal Code
-	//if(distance_to_the_next_maneuver<=200)
-	//{if(right?)elseif(left?)else(set-all-low)}
+	if(distance_to_the_next_maneuver<=200)
+	{
+		if(my_next_turn_is==1){digitalWrite (Left, HIGH);}
+		else if(my_next_turn_is==2){digitalWrite (Right, HIGH);}
+	        else(set-all-low){digitalWrite (Right,  LOW);digitalWrite (Left,  LOW)  ;}
+	}
 	
 	if (mr)
 		map_rect_destroy(mr);//access object is distroyed
