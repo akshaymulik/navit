@@ -2033,10 +2033,11 @@ static int osd_distance_to_the_next_maneuver(struct navit *navit)
                         /* Distance to the next maneuver. */
 			item_attr_get(item, attr_length, &attr);
 			//dbg(lvl_error, "Length=%ld in meters\n", attr.u.num); //Print Distance Arrival of next Maneuver
-			if ( attr.u.num >= 150 ) /*150m for bike and 200m for motor-vehicles*/
-			{return -1;}
-			else
-			{return attr.u.num;}
+			//if ( attr.u.num >= 150 ) /*150m for bike and 200m for motor-vehicles*/
+			//{return -1;}
+			//else
+			//{return attr.u.num;}
+			return attr.u.num;
 		}
 
 		map_rect_destroy(mr);
@@ -2076,6 +2077,54 @@ static int osd_time_to_the_next_maneuver(struct navit *navit)
 	}
 }
 
+static int my_next_turn(char *word)
+{
+ int i = 0;
+ while(word[i] != '\0')
+ 	{ 
+ 		//printf("%c \t",word[i]);
+ 		if(word[i]=='r'||word[i]=='R')
+ 		{
+ 			i++;
+ 			if(word[i]=='i'||word[i]=='I')
+ 			{
+ 			 i++;
+ 			 if(word[i]=='g'||word[i]=='G')
+ 			 {
+ 			  i++;
+ 			  if(word[i]=='h'||word[i]=='H')
+ 			  {
+ 			   i++;
+ 			   if(word[i]=='t'||word[i]=='T')
+ 			   {
+ 			   	return 2;
+ 			   }
+ 			  }
+ 			 }
+ 		    }
+ 		} 
+ 		else if(word[i]=='L'||word[i]=='l')
+ 		{
+ 			i++;
+ 			if(word[i]=='e'||word[i]=='E')
+ 			{
+ 			 i++;
+ 			 if(word[i]=='F'||word[i]=='f')
+ 			 {
+ 			  i++;
+ 			   if(word[i]=='t'||word[i]=='T')
+ 			   {
+ 			   	return 1;
+ 			   }
+ 			  }
+ 		    }
+ 		}
+ 		else{i++;}  
+ 	}
+ //printf("\n");
+ return 0;
+}
+
 static void
 osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       struct vehicle *v)
@@ -2092,11 +2141,11 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 	char *image;
 	char *name = "unknown";
 	int level = this->level;
-	int time_to_the_next_maneuver = osd_time_to_the_next_maneuver(navit); //Get time in minutes
+	//int time_to_the_next_maneuver = osd_time_to_the_next_maneuver(navit); //Get time in minutes
 	int distance_to_the_next_maneuver = osd_distance_to_the_next_maneuver(navit); //Get Dsitance in meters
-        dbg(lvl_error, "Time=%d\n", time_to_the_next_maneuver);//Debug will print line to shell with time
+        //dbg(lvl_error, "Time=%d\n", time_to_the_next_maneuver);//Debug will print line to shell with time
         dbg(lvl_error, "Distance remaining=%d\n", distance_to_the_next_maneuver);// And Distance.
-
+        int my_next_turn_is = 0; //straight:0,left:1,right:2.
 	if (navit)
 		nav = navit_get_navigation(navit);
 	if (nav)
@@ -2108,6 +2157,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
 		name = item_to_name(item->type);//item name found
+		my_next_turn_is = my_next_turn(name);
 		dbg(lvl_error, "name=%s\n", name); //debug level changed from 'debug' to 'error'
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
@@ -2120,6 +2170,10 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 			do_draw = 1;
 		}
 	}
+	//GPIO Signal Code
+	//if(distance_to_the_next_maneuver<=200)
+	//{if(right?)elseif(left?)else(set-all-low)}
+	
 	if (mr)
 		map_rect_destroy(mr);//access object is distroyed
 
