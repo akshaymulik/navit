@@ -2182,7 +2182,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 	{
 		if(my_next_turn_is==1){digitalWrite (Left, HIGH);}
 		else if(my_next_turn_is==2){digitalWrite (Right, HIGH);}
-	        else(set-all-low){digitalWrite (Right,  LOW);digitalWrite (Left,  LOW)  ;}
+	        else{digitalWrite (Right,  LOW);digitalWrite (Left,  LOW)  ;}
 	}
 	
 	if (mr)
