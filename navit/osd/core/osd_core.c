@@ -2079,7 +2079,7 @@ static int osd_time_to_the_next_maneuver(struct navit *navit)
 }
 
 //Left/Right/Straight
-static int my_next_turn(char *word)
+static int osd_my_next_turn(char *word)
 {
  int i = 0;
  while(word[i] != '\0')
@@ -2164,7 +2164,7 @@ osd_nav_next_turn_draw(struct osd_priv_common *opc, struct navit *navit,
 		       && (item->type == type_nav_position || item->type == type_nav_none || level-- > 0));
 	if (item) {
 		name = item_to_name(item->type);//item name found
-		my_next_turn_is = my_next_turn(name);
+		my_next_turn_is = osd_my_next_turn(name);
 		dbg(lvl_error, "name=%s\n", name); //debug level changed from 'debug' to 'error'
 		if (this->active != 1 || this->last_name != name) {
 			this->active = 1;
