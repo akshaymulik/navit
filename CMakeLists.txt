@@ -150,7 +150,6 @@ find_package(Glib)
 find_package(Gmodule)
 find_package(ZLIB)
 find_library(wiringPi_LIB wiringPi)
-target_link_libraries(Object ${wiringPi_LIB})
 find_package(Freetype)
 find_library(SDL2MAIN SDL2)
 find_library(SDL2IMAGE SDL2_image)
@@ -784,7 +783,7 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 # -Wno-sign-compare: We currently just use int almost everywhere.
 #                    Unclear if it's really worth correcting.
 if(CMAKE_COMPILER_IS_GNUCC OR CCMAKE_COMPILER_IS_GNUCXX)
-   set(COMMON_COMPILER_FLAGS "-Wall -Wundef -Wcast-align -Wpointer-arith -Wno-unused-parameter -Wno-sign-compare")
+   set(COMMON_COMPILER_FLAGS "-Wall -Wundef -Wcast-align -Wpointer-arith -Wno-unused-parameter -Wno-sign-compare -lwiringPi")
    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${COMMON_COMPILER_FLAGS}")
    set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} ${COMMON_COMPILER_FLAGS}")
    # flags not available in old GCC versions, or not for both C and C++
